@@ -4,10 +4,3 @@ compatibility_date = "2025-01-01"
 
 [assets]
 directory = "./frontend"
-
-[env.temp]
-name = "codetoroad-v1-temp"
-main = "backend/worker.js"
-
-[env.temp.assets]
-directory = "./frontend"
