@@ -1,26 +1,33 @@
-const API_BASE = "https://YOUR_WORKER_URL"; // replace later
+const API_BASE = "https://api.codetoroad.in"
 
-async function loadProducts() {
-  const res = await fetch(`${API_BASE}/products`);
-  const data = await res.json();
+async function loadBlogs() {
+  try {
+    const response = await fetch(`${API_BASE}/api/blog`)
+    const blogs = await response.json()
 
-  const container = document.getElementById("products");
-  data.forEach(p => {
-    container.innerHTML += `
-      <a href="#" onclick="trackAndGo('${p.id}','${p.affiliate_url}')">
-        ${p.name}
-      </a>
-    `;
-  });
+    const blogContainer = document.getElementById("blog-list")
+    blogContainer.innerHTML = ""
+
+    if (!blogs.length) {
+      blogContainer.innerHTML = "<p>No blogs available yet.</p>"
+      return
+    }
+
+    blogs.forEach(blog => {
+      const div = document.createElement("div")
+      div.className = "blog-card"
+      div.innerHTML = `
+        <h3>${blog.title}</h3>
+        <p>${blog.content}</p>
+      `
+      blogContainer.appendChild(div)
+    })
+
+  } catch (error) {
+    console.error("Failed to load blogs:", error)
+    document.getElementById("blog-list").innerHTML =
+      "<p>Failed to load blogs.</p>"
+  }
 }
 
-function trackAndGo(id, url) {
-  fetch(`${API_BASE}/track-click`, {
-    method: "POST",
-    body: JSON.stringify({ productId: id })
-  }).then(() => {
-    window.location.href = url;
-  });
-}
-
-loadProducts();
+document.addEventListener("DOMContentLoaded", loadBlogs)
