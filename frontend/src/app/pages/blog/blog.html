@@ -1,0 +1,10 @@
+<h2>Latest Blogs</h2>
+
+<div *ngIf="!blogs.length">
+  Loading blogs...
+</div>
+
+<div *ngFor="let blog of blogs" style="margin-bottom:20px; padding:15px; background:#1a1a1a; border-radius:8px;">
+  <h3 style="color:#ff6b00;">{{ blog.title }}</h3>
+  <p>{{ blog.content }}</p>
+</div>
