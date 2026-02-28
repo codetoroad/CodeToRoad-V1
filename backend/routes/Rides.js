@@ -1,12 +1,20 @@
 export async function handleRideRoutes(request, env) {
-  if (request.method === 'GET') {
-    return new Response(
-      JSON.stringify([
-        { id: 1, route: "Pune to Mysore", bike: "Triumph Speed 400" }
-      ]),
-      { headers: { "Content-Type": "application/json" } }
-    )
-  }
+  const API_KEY = env.YOUTUBE_API_KEY;
+  const CHANNEL_ID = "UCGrUpSsR3eZLNTMxTQsNWIw";
 
-  return new Response('Method Not Allowed', { status: 405 })
+  const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=8&type=video`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  const rides = data.items.map(video => ({
+    id: video.id.videoId,
+    title: video.snippet.title,
+    thumbnail: video.snippet.thumbnails.high.url,
+    publishedAt: video.snippet.publishedAt
+  }));
+
+  return new Response(JSON.stringify(rides), {
+    headers: { "Content-Type": "application/json" }
+  });
 }
